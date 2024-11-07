@@ -1,5 +1,4 @@
 using Framework.Architecture;
-using Mono.Cecil.Cil;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,7 +25,7 @@ namespace Framework.UI
         WM_UPDATE,
         WM_SETFOCUS,
         WM_RELEASEFOCUS,
-        WM_MAX = 64, //  WM_MESSAGE´Â INT_64·Î °ü¸®µÇ±â¿¡ ÃÑ 64°³ÀÇ Bitflag ( 0 ~ 63 )¸¦ ºÎ¿©ÇØ¼­ »ç¿ëÇÔ.
+        WM_MAX = 64, //  WM_MESSAGEï¿½ï¿½ INT_64ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç±â¿¡ ï¿½ï¿½ 64ï¿½ï¿½ï¿½ï¿½ Bitflag ( 0 ~ 63 )ï¿½ï¿½ ï¿½Î¿ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½.
     }
 
     public class WindowMessage
@@ -62,8 +61,8 @@ namespace Framework.UI
         {
             return (_flag & (Int64)(1 << (byte)_msg)) != 0;
         }
-        
-        private Int64       flag;
+
+        private Int64 flag;
     }
 
     [RequireComponent(typeof(Canvas))]
@@ -73,11 +72,11 @@ namespace Framework.UI
     {
         static private WeakReference<WindowControllerBase> currentFocusWindow = new WeakReference<WindowControllerBase>();
 
-        private WeakReference<Canvas>           canvas        = new WeakReference<Canvas>();
-        private WeakReference<WindowLayer>      attachedLayer = new WeakReference<WindowLayer>();
+        private WeakReference<Canvas> canvas = new WeakReference<Canvas>();
+        private WeakReference<WindowLayer> attachedLayer = new WeakReference<WindowLayer>();
         public WindowMessage Message { get { return message; } }
         private WindowMessage message = new WindowMessage();
-        public WindowLayer AttachedLayer 
+        public WindowLayer AttachedLayer
         {
             get
             {
@@ -127,7 +126,7 @@ namespace Framework.UI
         }
 
         /// <summary>
-        /// rootVisualElement°¡ Æ÷Ä¿½Ì µÇ¾úÀ» ¶§ È£ÃâµÊ.
+        /// rootVisualElementï¿½ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ï¿½.
         /// </summary>
         /// <param name="evt"></param>
         private void OnNotifySetFocus(FocusInEvent evt)
@@ -136,7 +135,7 @@ namespace Framework.UI
             this.Message.UnsetFlag(WM_MESSAGE.WM_RELEASEFOCUS);
         }
         /// <summary>
-        /// rootVisualElement°¡Æ÷Ä¿½ÌÀ» ÀÒ¾úÀ» ¶§ È£ÃâµÊ.
+        /// rootVisualElementï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¾ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ï¿½.
         /// </summary>
         /// <param name="evt"></param>
         private void OnNotifyReleaseFocus(FocusOutEvent evt)
@@ -153,22 +152,22 @@ namespace Framework.UI
             _window.Close();
         }
         /// <summary>
-        /// Window°¡ Æ÷Ä¿½ÌÀ» ¾ò¾úÀ» ¶§ È£ÃâµÊ.
+        /// Windowï¿½ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ï¿½.
         /// </summary>
-        /// <param name="_releaseFocusWindow">Æ÷Ä¿½ÌÀ» ÀÒ°Ô µÈ À©µµ¿ì</param>
+        /// <param name="_releaseFocusWindow">ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
         protected virtual void OnSetFocus(WindowControllerBase _releaseFocusWindow)
         {
             Debug.LogFormat("[SetFocus] {0}, Relese = {1}", this.ToString(), _releaseFocusWindow ? _releaseFocusWindow.ToString() : "None");
         }
         /// <summary>
-        /// Window°¡ Æ÷Ä¿½ÌÀ» ÀÒ¾úÀ» ¶§ È£ÃâµÊ.
+        /// Windowï¿½ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¾ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ï¿½.
         /// </summary>
-        /// <param name="_setFocusWindow">Æ÷Ä¿½ÌÀ» ¾ò°Ô µÈ À©µµ¿ì</param>
-        protected virtual void OnReleaseFocus(WindowControllerBase _setFocusWindow) 
+        /// <param name="_setFocusWindow">ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+        protected virtual void OnReleaseFocus(WindowControllerBase _setFocusWindow)
         {
             Debug.LogFormat("[ReleseFocus] {0}, SetFocus = {1}", this.ToString(), _setFocusWindow ? _setFocusWindow.ToString() : "None");
         }
-        protected virtual void OnClose() 
+        protected virtual void OnClose()
         {
             AttachedLayer = null;
         }
@@ -182,7 +181,7 @@ namespace Framework.UI
         {
             WindowModelBase _window = this.GetModel() as WindowModelBase;
 
-            if(_window == null)
+            if (_window == null)
             {
                 GameObject.Destroy(this.gameObject);
                 return false;
@@ -225,15 +224,15 @@ namespace Framework.UI
                     return true;
 
                 WindowLayer _layer = this.AttachedLayer;
-                if(_layer != null)
+                if (_layer != null)
                 {
-                    _window.openTime = Time.time;
+                    _window.OpenTime = Time.time;
                     _layer.SetRefreshDirtyFlag();
                 }
                 this.OnSetFocus(WindowControllerBase.currentFocusWindow.Target);
                 WindowControllerBase.currentFocusWindow.Target = this;
             }
-            else if(WindowMessage.HasFlag(_flag, WM_MESSAGE.WM_RELEASEFOCUS))
+            else if (WindowMessage.HasFlag(_flag, WM_MESSAGE.WM_RELEASEFOCUS))
             {
                 this.OnReleaseFocus(WindowControllerBase.currentFocusWindow.Target);
             }
@@ -257,7 +256,7 @@ namespace Framework.UI
 
         public virtual bool OnKeyUp(KeyCode _keyCode, bool _alt, bool _ctrl, bool _shift)
         {
-            if(_keyCode == KeyCode.Escape) { return this.OnEscape(); }
+            if (_keyCode == KeyCode.Escape) { return this.OnEscape(); }
             return false;
         }
 
@@ -281,7 +280,7 @@ namespace Framework.UI
                 WindowModelBase _model = this.GetModel() as WindowModelBase;
                 if (_model != null)
                 {
-                    return _model.openTime;
+                    return _model.OpenTime;
                 }
                 else
                 {
@@ -289,9 +288,9 @@ namespace Framework.UI
                 }
             }
         }
-        public WINDOW_LAYER Layer 
+        public WINDOW_LAYER Layer
         {
-            get 
+            get
             {
                 WindowModelBase _model = this.GetModel() as WindowModelBase;
                 if (_model != null)
@@ -302,13 +301,13 @@ namespace Framework.UI
                 {
                     return WINDOW_LAYER.MAX_LAYER;
                 }
-            } 
+            }
         }
     }
     /// <summary>
-    /// WindowÀÇ Controller ( Canvas, Image, Tweenµî view°´Ã¼¸¦ ÄÁÆ®·Ñ ÇÏ±â À§ÇÑ °´Ã¼ )
+    /// Windowï¿½ï¿½ Controller ( Canvas, Image, Tweenï¿½ï¿½ viewï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ )
     /// </summary>
-    /// <typeparam name="TModel">Window¸ðµ¨°´Ã¼Å¸ÀÔ</typeparam>
+    /// <typeparam name="TModel">Windowï¿½ðµ¨°ï¿½Ã¼Å¸ï¿½ï¿½</typeparam>
     public abstract class WindowController<TModel> : WindowControllerBase
         where TModel : WindowModelBase
     {
@@ -323,7 +322,7 @@ namespace Framework.UI
 
             if (_model == null)
             {
-                Debug.LogWarningFormat("[{0}]´Â [{1}]°ú ¿¬°áµÇ¾î¾ß ÇÕ´Ï´Ù. È®ÀÎ ºÎÅ¹µå¸³´Ï´Ù.", typeof(TModel).ToString(), this.GetType().ToString());
+                Debug.LogWarningFormat("[{0}]ï¿½ï¿½ [{1}]ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ ï¿½Õ´Ï´ï¿½. È®ï¿½ï¿½ ï¿½ï¿½Å¹ï¿½å¸³ï¿½Ï´ï¿½.", typeof(TModel).ToString(), this.GetType().ToString());
                 GameObject.Destroy(this.gameObject);
                 return;
             }
@@ -356,8 +355,9 @@ namespace Framework.UI
     public abstract class WindowModelBase : Architecture.IModel
     {
         private readonly WindowAttribute attribute = null;
+        public bool ReservedDestroy { get; set; }
         public bool IsActive { get; private set; }
-        public float openTime { get; set; }
+        public float OpenTime { get; set; }
         public WINDOW_LAYER Layer { get { return this.attribute.Layer; } }
 
         public WindowModelBase()
@@ -370,13 +370,13 @@ namespace Framework.UI
             ResourceLoader.Instance.LoadControllerAsync<T>(_ret.attribute, new WeakReference<T>(_ret));
             return _ret;
         }
-        
+
         public virtual void OnInit()
         {
         }
         public virtual void OnOpen(params object[] _parames)
         {
-            openTime = Time.time;
+            OpenTime = Time.time;
 
             WindowControllerBase _controller = this.Controller as WindowControllerBase;
             if (_controller != null)
@@ -389,7 +389,7 @@ namespace Framework.UI
         }
         public virtual void OnClose()
         {
-            openTime = 0;
+            OpenTime = 0;
 
             WindowControllerBase _controller = this.Controller as WindowControllerBase;
             if (_controller != null)
@@ -411,17 +411,13 @@ namespace Framework.UI
         {
             this.IsActive = _active;
         }
-        public virtual void Close()
+        public virtual void Close(bool _destroy = false)
         {
-            UIManager.Instance.Close(this);
-        }
-        public virtual void Destroy()
-        {
-            UIManager.Instance.Close(this, true);
+            UIManager.Instance.Close(this, _destroy);
         }
 
         /// <summary>
-        /// ModelÀÇ °»½ÅÀ» ControllerÀ» ÅëÇØ View¿¡ ¾Ë¸²
+        /// Modelï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Controllerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Viewï¿½ï¿½ ï¿½Ë¸ï¿½
         /// </summary>
         public override void UpdateData()
         {
@@ -452,7 +448,7 @@ namespace Framework.UI
     }
 
     /// <summary>
-    /// WindowÀÇ Contents Logic°ú Data¸¦ °¡Áö°í ÀÖ´Â Model °´Ã¼
+    /// Windowï¿½ï¿½ Contents Logicï¿½ï¿½ Dataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Model ï¿½ï¿½Ã¼
     /// </summary>
     public abstract class Window<TController> : WindowBase
         where TController : WindowControllerBase
@@ -468,12 +464,12 @@ namespace Framework.UI
         }
         public TController GetController()
         {
-            return this.Controller as TController; 
+            return this.Controller as TController;
         }
     }
 
     /// <summary>
-    /// CommonWindowÀÇ Contents Logic°ú Data¸¦ °¡Áö°í ÀÖ´Â Model °´Ã¼
+    /// CommonWindowï¿½ï¿½ Contents Logicï¿½ï¿½ Dataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Model ï¿½ï¿½Ã¼
     /// </summary>
     public abstract class CommonWindow<TController> : CommonWindowBase
         where TController : WindowControllerBase

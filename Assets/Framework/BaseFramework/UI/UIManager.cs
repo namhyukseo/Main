@@ -1,26 +1,31 @@
 using System;
 using System.Collections.Generic;
+using Framework.Architecture;
+using TMPro.EditorUtilities;
+using Unity.VisualScripting;
 
 namespace Framework.UI
 {
-    public sealed class UIManager : Singleton.Singleton<UIManager> 
+    public sealed class UIManager : Singleton.Singleton<UIManager>, IUpdate, IPostLateUpdate
     {
         readonly List<WindowModelBase> openedWindows = new List<WindowModelBase>();
         readonly Dictionary<Type, WindowModelBase> loadedWindows = new Dictionary<Type, WindowModelBase>();
-
+        readonly Queue<WindowModelBase> pendingCloseWindows = new Queue<WindowModelBase>();
         protected override void OnInit()
         {
+            base.OnInit();
         }
         protected override void OnRelease()
         {
+            base.OnRelease();
         }
 
         /// <summary>
-        /// LoadµÇ¾îÀÖ´Â WindowBaseÀ» ¾ò¾î¿Â´Ù.
+        /// Loadï¿½Ç¾ï¿½ï¿½Ö´ï¿½ WindowBaseï¿½ï¿½ ï¿½ï¿½ï¿½Â´ï¿½.
         /// </summary>
-        /// <typeparam name="T">»ý¼ºÇÏ°íÀÚ ÇÏ´Â À©µµ¿ì Å¸ÀÔ</typeparam>
-        /// <param name="_load">trueÀÎ °æ¿ì »ý¼ºÈÄ return</param>
-        /// <returns>¾ò°íÀÚ ÇÏ´Â À©µµ¿ì</returns>
+        /// <typeparam name="T">ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½</typeparam>
+        /// <param name="_load">trueï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ return</param>
+        /// <returns>ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</returns>
         public T Get<T>(bool _load = false) where T : WindowBase
         {
             WindowModelBase _out = null;
@@ -47,30 +52,11 @@ namespace Framework.UI
 
             return _out as T;
         }
-
         /// <summary>
-        /// CommonWindow¸¦ ¿ÀÇÂÇÑ´Ù. ( MessageBoxµî°ú °°ÀÌ ´ÙÁßÀ¸·Î ¿­¸± ¼ö ÀÖ´Â À©µµ¿ì·ù )
+        /// Windowï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
         /// </summary>
-        /// <typeparam name="T">¿­°íÀÚ ÇÏ´Â À©µµ¿ì Å¸ÀÔ</typeparam>
-        /// <returns>OpenµÈ À©µµ¿ì</returns>
-
-        public T OpenCommonWindow<T>(params object[] _params) where T : CommonWindowBase, new()
-        {
-            T _ret = ObjectPool.Instance.Load<T>();
-            if(_ret == null)
-                _ret = WindowModelBase.CreateWindow<T>();
-
-            _ret.OnInit();
-
-            openedWindows.Add(_ret);
-            _ret.OnOpen(_params);
-            return _ret;
-        }
-        /// <summary>
-        /// Window¸¦ ¿ÀÇÂÇÑ´Ù.
-        /// </summary>
-        /// <typeparam name="T">¿­°íÀÚ ÇÏ´Â À©µµ¿ì Å¸ÀÔ</typeparam>
-        /// <returns>OpenµÈ À©µµ¿ì</returns>
+        /// <typeparam name="T">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½</typeparam>
+        /// <returns>Openï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</returns>
         public T Open<T>(params object[] _params) where T : WindowBase
         {
             T _ret = Get<T>(true);
@@ -82,32 +68,62 @@ namespace Framework.UI
             return _ret;
         }
         /// <summary>
-        /// À©µµ¿ì¸¦ ´Ý´Â´Ù.
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ì¸¦ ï¿½Ý´Â´ï¿½.
         /// </summary>
-        /// <typeparam name="T">´Ý°íÀÚ ÇÏ´Â À©µµ¿ì Å¸ÀÔ</typeparam>
-        /// <param name="_destroy">trueÀÎ°æ¿ì ´ÝÀ½°ú µ¿½Ã¿¡ »èÁ¦</param>
+        /// <typeparam name="T">ï¿½Ý°ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½</typeparam>
+        /// <param name="_destroy">trueï¿½Î°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½</param>
         public void Close<T>(bool _destroy = false) where T : WindowBase
         {
             T _ret = Get<T>();
             this.Close(_ret, _destroy);
         }
+        /// <summary>
+        /// CommonWindowï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½. ( MessageBoxï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ )
+        /// </summary>
+        /// <typeparam name="T">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½</typeparam>
+        /// <returns>Openï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</returns>
+        public T OpenCommonWindow<T>(params object[] _params) where T : CommonWindowBase
+        {
+            T _ret = ObjectPool.Instance.Load<T>();
+            if(_ret == null)
+                _ret = WindowModelBase.CreateWindow<T>();
 
+            _ret.OnInit();
+
+            openedWindows.Add(_ret);
+            _ret.OnOpen(_params);
+
+            return _ret;
+        }
         public void Close(WindowModelBase _target, bool _destroy = false)
         {
-            if (_target != null)
+            openedWindows.Remove(_target);
+            if (_target != null && !pendingCloseWindows.Contains(_target))
             {
-                if (openedWindows.Contains(_target))
-                {
-                    _target.OnClose();
-                    openedWindows.Remove(_target);
-                }
-                if (_destroy)
-                {
-                    _target.OnDestroy();
-                    loadedWindows.Remove(_target.GetType());
-                }
+                pendingCloseWindows.Enqueue(_target);
+                _target.ReservedDestroy = _destroy;
             }
+        } 
+        public void OnUpdate(float _deltaTime)
+        {
+        }
+        public void OnPostLateUpdate(float _deltaTime)
+        {
+            while(pendingCloseWindows.Count != 0)
+            {
+                WindowModelBase _window = pendingCloseWindows.Dequeue();
+                _window.OnClose();
+
+                if(_window.ReservedDestroy)
+                {
+                    loadedWindows.Remove(_window.GetType());
+                    _window.OnDestroy();
+                }
+                else if(_window is CommonWindowBase)
+                {
+                    ObjectPool.Instance.Unload(_window as CommonWindowBase);
+                }
+            }            
         }
     }
-
 }

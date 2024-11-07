@@ -14,10 +14,12 @@ namespace Framework
     {
         protected override void OnInit()
         {
+            base.OnInit();
         }
 
         protected override void OnRelease()
         {
+            base.OnRelease();
         }
 
         public void LoadControllerAsync<T>(ResourceAttribute _attribute, WeakReference<T> _model) where T : IModel
@@ -47,7 +49,7 @@ namespace Framework
     }
 
     /// <summary>
-    /// AssetÀ» °ü¸®ÇÏ±â À§ÇÑ °´Ã¼
+    /// Assetï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼
     /// </summary>
     internal class Asset
     {
@@ -61,7 +63,7 @@ namespace Framework
         Dictionary<string, List<string>> assetBundleManifest = new Dictionary<string, List<string>>();
         
         /// <summary>
-        /// LoadµÈ AssetBundleÀ» wraapingÇÑ °´Ã¼ 
+        /// Loadï¿½ï¿½ AssetBundleï¿½ï¿½ wraapingï¿½ï¿½ ï¿½ï¿½Ã¼ 
         /// </summary>
         private class AssetBundleElement
         {

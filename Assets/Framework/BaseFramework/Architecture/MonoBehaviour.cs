@@ -5,6 +5,22 @@ using UnityEngine;
 
 namespace Framework.Architecture
 {
+    public interface IUpdate
+    {
+        void OnUpdate(float _deltaTime);
+    }
+    public interface ILateUpdate
+    {
+        void OnLateUpdate(float _deltaTime);
+    }
+    public interface IPostLateUpdate
+    {
+        void OnPostLateUpdate(float _deltaTime);
+    }
+    public interface IFixedUpdate
+    {
+        void OnFixedUpdate(float _deltaTime);
+    }    
     internal class RootMonoBehaviour : UnityEngine.MonoBehaviour
     {
         static GameObject rootGameObject = null;
@@ -41,11 +57,6 @@ namespace Framework.Architecture
         {
             eventFixedUpdate?.Invoke(UnityEngine.Time.fixedDeltaTime);
         }
-        private void OnGUI()
-        {
-            eventGUIEvent?.Invoke(Event.current); 
-        }
-
         public static Coroutine Start_Coroutine(IEnumerator _routine)
         {
             return rootMonoBehaviour.StartCoroutine(_routine);
@@ -63,34 +74,12 @@ namespace Framework.Architecture
     /// </summary>
     public abstract class MonoBehaviour : UnityEngine.MonoBehaviour
     {
-        public interface IUpdate
-        {
-            void OnUpdate(float _deltaTime);
-        }
-        public interface ILateUpdate
-        {
-            void OnLateUpdate(float _deltaTime);
-        }
-        public interface IPostLateUpdate
-        {
-            void OnPostLateUpdate(float _deltaTime);
-        }
-        public interface IFixedUpdate
-        {
-            void OnFixedUpdate(float _deltaTime);
-        }
-        public interface IOnGUIEvent
-        {
-            void OnGUIEvent(Event _event);
-        }
-
         protected virtual void OnEnable()
         {
             if (this is IUpdate)            RootMonoBehaviour.eventUpdate           += (this as IUpdate).OnUpdate;
             if (this is ILateUpdate)        RootMonoBehaviour.eventLateUpdate       += (this as ILateUpdate).OnLateUpdate;
             if (this is IPostLateUpdate)    RootMonoBehaviour.eventPostLateUpdate   += (this as IPostLateUpdate).OnPostLateUpdate;
             if (this is IFixedUpdate)       RootMonoBehaviour.eventFixedUpdate      += (this as IFixedUpdate).OnFixedUpdate;
-            if (this is IOnGUIEvent)        RootMonoBehaviour.eventGUIEvent         += (this as IOnGUIEvent).OnGUIEvent;
         }
 
         protected virtual void OnDisable()
@@ -99,7 +88,6 @@ namespace Framework.Architecture
             if (this is ILateUpdate)        RootMonoBehaviour.eventLateUpdate       -= (this as ILateUpdate).OnLateUpdate;
             if (this is IPostLateUpdate)    RootMonoBehaviour.eventPostLateUpdate   -= (this as IPostLateUpdate).OnPostLateUpdate;
             if (this is IFixedUpdate)       RootMonoBehaviour.eventFixedUpdate      -= (this as IFixedUpdate).OnFixedUpdate;
-            if (this is IOnGUIEvent)        RootMonoBehaviour.eventGUIEvent         -= (this as IOnGUIEvent).OnGUIEvent;
         }
 #if UNITY_EDITOR
         protected void Update()

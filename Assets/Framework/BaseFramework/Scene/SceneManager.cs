@@ -10,10 +10,12 @@ namespace Framework.Scene
 
         protected override void OnInit()
         {
+            base.OnInit();
         }
 
         protected override void OnRelease()
         {
+            base.OnRelease();
         }
 
         public void ChangeScene<T>() where T : SceneModelBase

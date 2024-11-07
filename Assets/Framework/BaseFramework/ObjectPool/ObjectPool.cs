@@ -8,22 +8,22 @@ public class ObjectPool : Framework.Singleton.Singleton<ObjectPool>
 {
     protected override void OnInit()
     {
+        base.OnInit();
     }
 
     protected override void OnRelease()
     {
+        base.OnRelease();
     }
 
     public T Load<T>()
-        where T : class, iPoolObject, new()
+        where T : class, iPoolObject
     {
         T _ret = null;
         Queue<iPoolObject> _queue = null;
 
         if (!objects.TryGetValue(typeof(T), out _queue) || _queue.Count == 0)
         {
-            _ret = new T();
-            _ret.OnLoadPoolObject();
             return _ret;
         }
 
@@ -48,9 +48,8 @@ public class ObjectPool : Framework.Singleton.Singleton<ObjectPool>
 
     protected Dictionary<Type, Queue<iPoolObject>> objects = new Dictionary<Type, Queue<iPoolObject>>();
 }
-
-public class GameObjectPool<T> : Framework.Singleton.Singleton<GameObjectPool<T>>
-    where T : Component, iPoolObject
+/*
+public class GameObjectPool : Framework.Singleton.Singleton<GameObjectPool>
 {
     protected override void OnInit()
     {
@@ -63,7 +62,8 @@ public class GameObjectPool<T> : Framework.Singleton.Singleton<GameObjectPool<T>
     {
     }
 
-    public T Load()
+    public T Load<T>() 
+        where T : Component, iPoolObject
     {
         T _ret = objects.Dequeue();
         if (_ret != null)
@@ -73,13 +73,20 @@ public class GameObjectPool<T> : Framework.Singleton.Singleton<GameObjectPool<T>
         return _ret;
     }
 
-    public void Unload(T _obj)
+    public void Unload(iPoolObject _obj)
     {
         _obj.OnLoadPoolObject();
-        _obj.transform.SetParent(rootObject.transform, false);
-        objects.Enqueue(_obj);
+        
+        Component _component = _obj as Component;
+
+        if(_component != null)
+        {
+            _obj.transform.SetParent(rootObject.transform, false);
+            objects.Enqueue(_obj);
+        }
     }
 
     protected Queue<T> objects = new Queue<T>();
     protected GameObject    rootObject = null;
 }
+*/

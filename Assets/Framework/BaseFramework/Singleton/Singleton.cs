@@ -22,7 +22,7 @@ namespace Framework.Singleton
             }
         }
 
-        public Singleton()
+        protected Singleton()
         {
             this.OnInit();
             instance = new WeakReference<T>(this as T);
@@ -32,13 +32,23 @@ namespace Framework.Singleton
         /// Singleton의 생성 시점에 호출되는 Callback함수,
         /// Singleton.Init를 통해 명시적으로 초기화가 호출되는 시점에 Singleton을 생성한 한 이후 SingletonContainer에 등록 후 호출.
         /// </summary>
-        protected abstract void OnInit();
+        protected virtual void OnInit()
+        {
+            if(this is IUpdate)         RootMonoBehaviour.eventUpdate += (this as IUpdate).OnUpdate;
+            if(this is ILateUpdate)     RootMonoBehaviour.eventLateUpdate += (this as ILateUpdate).OnLateUpdate;
+            if(this is IPostLateUpdate) RootMonoBehaviour.eventPostLateUpdate += (this as IPostLateUpdate).OnPostLateUpdate;
+        }
 
         /// <summary>
         /// Singleton을 해제 시키는 시점에 호출되는 Callback함수,
         /// Instance을 명시적으로 Release시키는 시점에 호출되며 이후 SingletonContainer에서 해제됨.
         /// </summary>
-        protected abstract void OnRelease();
+        protected virtual void OnRelease()
+        {
+            if(this is IUpdate)         RootMonoBehaviour.eventUpdate -= (this as IUpdate).OnUpdate;
+            if(this is ILateUpdate)     RootMonoBehaviour.eventLateUpdate -= (this as ILateUpdate).OnLateUpdate;
+            if(this is IPostLateUpdate) RootMonoBehaviour.eventPostLateUpdate -= (this as IPostLateUpdate).OnPostLateUpdate;
+        }
 
         public static bool Create()
         {

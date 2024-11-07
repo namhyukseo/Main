@@ -9,7 +9,7 @@ namespace Framework.Architecture
     /// GameObject에 Add되어있는 여타의 View객체를 Model과 연결하는 역할
     /// </summary>
     [DisallowMultipleComponent]
-    public abstract class IController : MonoBehaviour, MonoBehaviour.ILateUpdate, IDisposable
+    public abstract class IController : MonoBehaviour, ILateUpdate, IDisposable
     {
         private WeakReference<IModel> modelRef = new WeakReference<IModel>();
         protected IModel GetModel()

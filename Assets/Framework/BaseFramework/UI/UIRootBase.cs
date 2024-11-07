@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace Framework.UI
 {
 
-    public abstract class UIRootBase : Architecture.MonoBehaviour, Architecture.MonoBehaviour.IPostLateUpdate, Architecture.MonoBehaviour.IUpdate, Architecture.MonoBehaviour.IOnGUIEvent,
+    public abstract class UIRootBase : Architecture.MonoBehaviour, Architecture.IPostLateUpdate, Architecture.IUpdate,
         KeyEventHandler.IKeyDownEvent, KeyEventHandler.IKeyUpEvent
     {
         [SerializeField] private GameObject closeWindowsRoot;
@@ -92,13 +92,17 @@ namespace Framework.UI
             }
 
         }
+        static Event _event = new Event();
         public void OnUpdate(float _deltaTime)
         {
-            
-        }
-        public void OnGUIEvent(Event _event)
-        {
-            KeyEventHandler.OnKeyProcess(_event);
+            int _eventCount = Event.GetEventCount();
+            for(int i=0;i<_eventCount;++i)
+            {
+                if(Event.PopEvent(_event))
+                {
+                    KeyEventHandler.OnKeyProcess(_event);
+                }                
+            }
         }
 
         protected void OnDestroy()
