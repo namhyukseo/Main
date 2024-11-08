@@ -36,6 +36,7 @@ namespace Framework.Architecture
             return string.Empty;
         }
         public WINDOW_LAYER Layer { get; set; }
+        public bool IsModal { get; set; }
     }
 
     /// <summary>

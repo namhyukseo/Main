@@ -303,6 +303,21 @@ namespace Framework.UI
                 }
             }
         }
+        public bool IsModal
+        {
+            get
+            {
+                WindowModelBase _model = this.GetModel() as WindowModelBase;
+                if (_model != null)
+                {
+                    return _model.IsModal;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
     }
     /// <summary>
     /// Window�� Controller ( Canvas, Image, Tween�� view��ü�� ��Ʈ�� �ϱ� ���� ��ü )
@@ -359,6 +374,7 @@ namespace Framework.UI
         public bool IsActive { get; private set; }
         public float OpenTime { get; set; }
         public WINDOW_LAYER Layer { get { return this.attribute.Layer; } }
+        public bool IsModal { get { return this.attribute.IsModal; } }
 
         public WindowModelBase()
         {

@@ -23,7 +23,7 @@ public class LobbyWindowController : WindowController<LobbyWindow>
 
     public void OnBtnClickedOK()
     {
-        UIManager.Instance.OpenCommonWindow<MessageBox>();
+        UIManager.Instance.OpenCommonWindow<MessageBox>("테스트라지요","안녕하세요~ 나며기에요");
     }
 
     protected override bool OnRefreshView()

@@ -11,7 +11,7 @@ namespace Framework.UI
         KeyEventHandler.IKeyDownEvent, KeyEventHandler.IKeyUpEvent
     {
         [SerializeField] private GameObject closeWindowsRoot;
-        [SerializeField] private Canvas     rootCanvas;
+        [SerializeField] private Canvas     blockPandelCanvas;
         readonly private WeakReference<WindowLayer>[] layers = new WeakReference<WindowLayer>[(int)WINDOW_LAYER.MAX_LAYER];
 
         public static WeakReference<UIRootBase> uiRoot = null;
@@ -23,6 +23,7 @@ namespace Framework.UI
         protected virtual void Awake()
         {
             UIRootBase.uiRoot = new WeakReference<UIRootBase>(this);
+            blockPandelCanvas.gameObject.SetActive(false);
 
             DontDestroyOnLoad(this.gameObject);
 
@@ -82,21 +83,36 @@ namespace Framework.UI
         }
         public void OnPostLateUpdate(float _deltaTime)
         {
+            WindowControllerBase _topModalWindow = null;
+
             for (int i = (int)WINDOW_LAYER.MAX_LAYER - 1; i >= (int)WINDOW_LAYER.BEGIN; --i)
             {
                 WindowLayer _layer = layers[i].Target;
                 if (_layer)
                 {
-                    _layer.Sort();
+                    if(_layer.CalcSortingOrder() && _topModalWindow == null)
+                    {
+                        _topModalWindow = _layer.GetTopModalWindowController();
+                    }
                 }
             }
 
+            if(_topModalWindow != null)
+            {
+                blockPandelCanvas.gameObject.SetActive(true);
+                blockPandelCanvas.overrideSorting = true;
+                blockPandelCanvas.sortingOrder = _topModalWindow.WindowCanvas.sortingOrder - 1;
+            }
+            else
+            {
+                blockPandelCanvas.gameObject.SetActive(false);
+            }
         }
         static Event _event = new Event();
         public void OnUpdate(float _deltaTime)
         {
             int _eventCount = Event.GetEventCount();
-            for(int i=0;i<_eventCount;++i)
+            for(int i=0; i<_eventCount; ++i)
             {
                 if(Event.PopEvent(_event))
                 {

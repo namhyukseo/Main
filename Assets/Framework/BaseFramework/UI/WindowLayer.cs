@@ -55,7 +55,7 @@ namespace Framework.UI
         [SerializeField]    private WINDOW_LAYER            layer;
         [ExposeAttriubte]   private List<WindowControllerBase>   openedWindows = new List<WindowControllerBase>();
 
-        public void Sort()
+        public bool CalcSortingOrder()
         {
             if(refreshDirtyFlag == true)
             {
@@ -64,10 +64,25 @@ namespace Framework.UI
                 foreach(WindowControllerBase win in openedWindows) 
                 {
                     win.WindowCanvas.overrideSorting = true;
-                    win.WindowCanvas.sortingOrder = (int)layer * 100 + i++;
+                    win.WindowCanvas.sortingOrder = (int)layer * 10000 + (i*100);
+                    ++i;
                 }
                 refreshDirtyFlag = false;
+                
+                return true;
             }
+            return false;
+        }
+
+        public WindowControllerBase GetTopModalWindowController()
+        {
+            for(int i=openedWindows.Count-1; i>=0; i--) 
+            {
+                WindowControllerBase win = openedWindows[i];
+                if(win.IsModal)
+                    return win;
+            }
+            return null;
         }
 
         public void OnAttach(WindowControllerBase _window)
