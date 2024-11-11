@@ -5,6 +5,7 @@ using Framework.UI;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using TMPro;
+using System;
 
 public class MessageBoxTypeController : WindowController<MessageBox>
 {
@@ -25,6 +26,16 @@ public class MessageBoxTypeController : WindowController<MessageBox>
 
         return true;
     }
+
+    public void OnOK()
+    {
+        this.Model.onOK?.Invoke();
+    }
+
+    public void OnCancel()
+    {
+        this.Model.onCancel?.Invoke();
+    }
 }
 
 [Framework.Architecture.Window(Path = "Assets/Bundle/ui/MessageBox/MessageBox.prefab", Layer = WINDOW_LAYER.TOP, IsModal = true)]
@@ -41,4 +52,6 @@ public sealed class MessageBox : CommonWindow<MessageBoxTypeController>
     public string windowTitle { get; set; }
     public string windowMessage { get; set; }
 
+    public Action onOK{ get; set; }
+    public Action onCancel{ get; set; }
 }

@@ -15,7 +15,7 @@ namespace Framework.UI
         readonly private WeakReference<WindowLayer>[] layers = new WeakReference<WindowLayer>[(int)WINDOW_LAYER.MAX_LAYER];
 
         public static WeakReference<UIRootBase> uiRoot = null;
-
+        private WeakReference<WindowControllerBase> topModalWindowController = new WeakReference<WindowControllerBase>(null);
         public static void Create(ResourceAttribute _attribute)
         {
             ResourceLoader.Instance.LoadGameObject<UIRootBase>(_attribute, null);
@@ -90,22 +90,29 @@ namespace Framework.UI
                 WindowLayer _layer = layers[i].Target;
                 if (_layer)
                 {
-                    if(_layer.CalcSortingOrder() && _topModalWindow == null)
+                    _layer.CalcSortingOrder();
+
+                    if(_topModalWindow == null)
                     {
                         _topModalWindow = _layer.GetTopModalWindowController();
                     }
                 }
             }
 
-            if(_topModalWindow != null)
+            if(topModalWindowController.Target != _topModalWindow)
             {
-                blockPandelCanvas.gameObject.SetActive(true);
-                blockPandelCanvas.overrideSorting = true;
-                blockPandelCanvas.sortingOrder = _topModalWindow.WindowCanvas.sortingOrder - 1;
-            }
-            else
-            {
-                blockPandelCanvas.gameObject.SetActive(false);
+                topModalWindowController.Target = _topModalWindow;
+
+                if (_topModalWindow == null)
+                {
+                    blockPandelCanvas.gameObject.SetActive(false);
+                }
+                else
+                {
+                    blockPandelCanvas.gameObject.SetActive(true);
+                    blockPandelCanvas.overrideSorting = true;
+                    blockPandelCanvas.sortingOrder = _topModalWindow.WindowCanvas.sortingOrder - 1;
+                }
             }
         }
         static Event _event = new Event();

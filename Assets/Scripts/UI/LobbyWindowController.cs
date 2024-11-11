@@ -18,6 +18,11 @@ public class LobbyWindowController : WindowController<LobbyWindow>
 
     protected override bool OnEscape()
     {
+        MessageBox _msg = UIManager.Instance.OpenCommonWindow<MessageBox>("게임 종료?", "게임을 종료합니까?");
+
+        _msg.onOK = () => UIManager.Instance.OpenCommonWindow<MessageBox>("죵료", "종료합니다.");
+        _msg.onCancel = () => _msg.Close();
+
         return true;
     }
 
