@@ -28,14 +28,14 @@ public class ObjectPool : Framework.Singleton.Singleton<ObjectPool>
         }
 
         _ret = _queue.Dequeue() as T;
-        _ret.OnLoadPoolObject();
+        _ret.OnLoad();
         
         return _ret;
     }
 
     public  void Unload(iPoolObject _obj)
     {
-        _obj.OnLoadPoolObject();
+        _obj.OnUnload();
         Queue<iPoolObject> _queue = null;
         if(!objects.TryGetValue(_obj.GetType(), out _queue))
         {

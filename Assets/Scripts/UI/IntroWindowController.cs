@@ -4,7 +4,7 @@ using UnityEngine;
 using Framework.UI;
 using UnityEngine.UIElements;
 
-public class LobbyWindowController : WindowController<LobbyWindow>
+public class IntroWindowController : WindowController<IntroWindow>
 {
     protected override void Awake()
     {
@@ -30,16 +30,16 @@ public class LobbyWindowController : WindowController<LobbyWindow>
         #endif        
             }
         );
-
+    
         return true;
     }
 
     public void OnBtnClickedOK()
     {
-        MessageBox _msg = MessageBox.Open("인트로행?","인트로로 갑니다효??", MessageBox.MessageBoxType.MB_OK,
+        MessageBox _msg = MessageBox.Open("로비행?","로비로 갑니다효??", MessageBox.MessageBoxType.MB_OK,
             () =>
             {
-                Framework.Scene.SceneManager.Instance.ChangeScene<IntroScene>();
+                Framework.Scene.SceneManager.Instance.ChangeScene<LobbyScene>();
             }
         );
     }
@@ -51,15 +51,14 @@ public class LobbyWindowController : WindowController<LobbyWindow>
             return false;
         }
         
-        LobbyWindow _windowModel = this.Model;
-        //textField.text = _windowModel.TextValue.ToString();
+        IntroWindow _windowModel = this.Model;
 
         return true;
     }
 }
 
-[Framework.Architecture.Window(Path = "Assets/Bundle/ui/Lobby/LobbyWindow.prefab", Layer = WINDOW_LAYER.MIDDLE)]
-public sealed class LobbyWindow : Window<LobbyWindowController>
+[Framework.Architecture.Window(Path = "Assets/Bundle/ui/Intro/IntroWindow.prefab", Layer = WINDOW_LAYER.MIDDLE)]
+public sealed class IntroWindow : Window<IntroWindowController>
 {
     public int TextValue { get; set; }
 }

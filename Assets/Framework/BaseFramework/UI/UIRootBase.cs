@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Framework.Architecture;
 using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 
 namespace Framework.UI
@@ -24,6 +25,8 @@ namespace Framework.UI
         {
             UIRootBase.uiRoot = new WeakReference<UIRootBase>(this);
             blockPandelCanvas.gameObject.SetActive(false);
+
+            this.AddComponent<CustomInputModule>();
 
             DontDestroyOnLoad(this.gameObject);
 

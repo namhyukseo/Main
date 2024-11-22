@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class LobbySceneController : Framework.Scene.SceneController<LobbyScene>
+public class IntroSceneController : Framework.Scene.SceneController<IntroScene>
 {
     protected override bool OnRefreshView()
     {
@@ -10,20 +10,20 @@ public class LobbySceneController : Framework.Scene.SceneController<LobbyScene>
     }
 }
 
-[Framework.Architecture.Scene(Path = "Assets/Bundle/Scene/LobbyScene.unity")]
-public class LobbyScene : Framework.Scene.SceneModel<LobbySceneController>
+[Framework.Architecture.Scene(Path = "Assets/Bundle/Scene/IntroScene.unity")]
+public class IntroScene : Framework.Scene.SceneModel<IntroSceneController>
 {
     public override void OnEnterScene(SceneModelBase _beforeActiveScene)
     {
         base.OnEnterScene(_beforeActiveScene);
 
-        Framework.UI.UIManager.Instance.Open<LobbyWindow>();
+        Framework.UI.UIManager.Instance.Open<IntroWindow>();
     }
 
     public override void OnExitScene(SceneModelBase _nextActiveScene)
     {
         base.OnExitScene(_nextActiveScene);
 
-        Framework.UI.UIManager.Instance.Close<LobbyWindow>();
+        Framework.UI.UIManager.Instance.Close<IntroWindow>();
     }
 }

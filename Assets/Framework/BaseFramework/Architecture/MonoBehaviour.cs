@@ -32,11 +32,7 @@ namespace Framework.Architecture
             GameObject.DontDestroyOnLoad(rootGameObject);
             rootGameObject.hideFlags = HideFlags.DontSave;
             rootMonoBehaviour = rootGameObject.AddComponent<RootMonoBehaviour>();
-        }
-        public RootMonoBehaviour()
-        {
-
-        }
+        }  
 
         public static Action<float> eventUpdate         = null;
         public static Action<float> eventLateUpdate     = null;

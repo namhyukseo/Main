@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface iPoolObject
 {
-    void OnLoadPoolObject();
-    void OnUnloadPoolObject();
+    void OnLoad();
+    void OnUnload();
 }

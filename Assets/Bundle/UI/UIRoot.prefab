@@ -215,7 +215,6 @@ GameObject:
   - component: {fileID: 7447949422852869230}
   - component: {fileID: 7961010962994439481}
   - component: {fileID: 1124026421274844929}
-  - component: {fileID: 5417702029118453240}
   m_Layer: 0
   m_Name: UIRoot
   m_TagString: Untagged
@@ -268,26 +267,6 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 3721475189816368691}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
---- !u!114 &5417702029118453240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2172299410177116628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!1 &3418738897329485378
 GameObject:
   m_ObjectHideFlags: 0

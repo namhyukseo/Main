@@ -67,15 +67,13 @@ namespace Framework.UI
 
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(GraphicRaycaster))]
-    public abstract class WindowControllerBase : Architecture.IController, KeyEventHandler.IKeyDownEvent, KeyEventHandler.IKeyUpEvent,
-                                            IPointerClickHandler, IPointerDownHandler
+    public abstract class WindowControllerBase : Architecture.IController, KeyEventHandler.IKeyDownEvent, KeyEventHandler.IKeyUpEvent, IPointerDownHandler
     {
         static private WeakReference<WindowControllerBase> currentFocusWindow = new WeakReference<WindowControllerBase>();
-
-        private WeakReference<Canvas> canvas = new WeakReference<Canvas>();
-        private WeakReference<WindowLayer> attachedLayer = new WeakReference<WindowLayer>();
-        public WindowMessage Message { get { return message; } }
-        private WindowMessage message = new WindowMessage();
+        private     WeakReference<Canvas> canvas = new WeakReference<Canvas>();
+        private     WeakReference<WindowLayer> attachedLayer = new WeakReference<WindowLayer>();
+        public      WindowMessage Message { get { return message; } }
+        private     WindowMessage message = new WindowMessage();
         public WindowLayer AttachedLayer
         {
             get
@@ -102,7 +100,12 @@ namespace Framework.UI
                 }
             }
         }
-
+        protected   WeakReference<WindowTitlebar>  windowTitlebar = null;
+        public  void SetWindowTitlebar(WindowTitlebar _titleBar)
+        {
+            windowTitlebar = new WeakReference<WindowTitlebar>(_titleBar);
+        }
+        
         public Canvas WindowCanvas
         {
             get { return this.canvas.Target; }
@@ -123,49 +126,18 @@ namespace Framework.UI
         protected override void OnDisable()
         {
             base.OnDisable();
-        }
-
-        /// <summary>
-        /// rootVisualElement�� ��Ŀ�� �Ǿ��� �� ȣ���.
-        /// </summary>
-        /// <param name="evt"></param>
-        private void OnNotifySetFocus(FocusInEvent evt)
-        {
-            this.Message.SetFlag(WM_MESSAGE.WM_SETFOCUS);
-            this.Message.UnsetFlag(WM_MESSAGE.WM_RELEASEFOCUS);
-        }
-        /// <summary>
-        /// rootVisualElement����Ŀ���� �Ҿ��� �� ȣ���.
-        /// </summary>
-        /// <param name="evt"></param>
-        private void OnNotifyReleaseFocus(FocusOutEvent evt)
-        {
-            this.Message.SetFlag(WM_MESSAGE.WM_SETFOCUS);
-            this.Message.UnsetFlag(WM_MESSAGE.WM_RELEASEFOCUS);
-        }
-        private void OnNotifyClose()
-        {
-            WindowModelBase _window = this.GetModel() as WindowModelBase;
-            if (_window == null)
-                return;
-
-            _window.Close();
-        }
-        /// <summary>
-        /// Window�� ��Ŀ���� ����� �� ȣ���.
-        /// </summary>
-        /// <param name="_releaseFocusWindow">��Ŀ���� �Ұ� �� ������</param>
+        }   
         protected virtual void OnSetFocus(WindowControllerBase _releaseFocusWindow)
         {
             Debug.LogFormat("[SetFocus] {0}, Relese = {1}", this.ToString(), _releaseFocusWindow ? _releaseFocusWindow.ToString() : "None");
         }
-        /// <summary>
-        /// Window�� ��Ŀ���� �Ҿ��� �� ȣ���.
-        /// </summary>
-        /// <param name="_setFocusWindow">��Ŀ���� ��� �� ������</param>
         protected virtual void OnReleaseFocus(WindowControllerBase _setFocusWindow)
         {
             Debug.LogFormat("[ReleseFocus] {0}, SetFocus = {1}", this.ToString(), _setFocusWindow ? _setFocusWindow.ToString() : "None");
+        }
+        protected virtual void OnCreate()
+        {
+
         }
         protected virtual void OnClose()
         {
@@ -214,8 +186,8 @@ namespace Framework.UI
                 }
 
                 this.SetActive(true);
+                this.SetFocus();
                 this.OnOpen();
-                //this.RootElement.Focus();
             }
 
             if (WindowMessage.HasFlag(_flag, WM_MESSAGE.WM_SETFOCUS))
@@ -226,10 +198,15 @@ namespace Framework.UI
                 WindowLayer _layer = this.AttachedLayer;
                 if (_layer != null)
                 {
-                    _window.OpenTime = Time.time;
                     _layer.SetRefreshDirtyFlag();
                 }
+                this.OpenTime = Time.time;
                 this.OnSetFocus(WindowControllerBase.currentFocusWindow.Target);
+
+                if(WindowControllerBase.currentFocusWindow.Target != null)
+                {
+                    WindowControllerBase.currentFocusWindow.Target.message.SetFlag(WM_MESSAGE.WM_RELEASEFOCUS);
+                }
                 WindowControllerBase.currentFocusWindow.Target = this;
             }
             else if (WindowMessage.HasFlag(_flag, WM_MESSAGE.WM_RELEASEFOCUS))
@@ -240,6 +217,10 @@ namespace Framework.UI
             if (WindowMessage.HasFlag(_flag, WM_MESSAGE.WM_DESTROY))
             {
                 GameObject.Destroy(this.gameObject);
+            }
+            else if (WindowMessage.HasFlag(_flag, WM_MESSAGE.WM_CREATE))
+            {
+                this.OnCreate();
             }
 
             return true;
@@ -262,12 +243,11 @@ namespace Framework.UI
 
         protected abstract bool OnEscape();
 
-        public void OnPointerClick(PointerEventData eventData)
+        public virtual void OnPointerDown(PointerEventData eventData)
         {
-            Debug.LogFormat("OnPointerClick {0}", eventData.ToString());
         }
 
-        public void OnPointerDown(PointerEventData eventData)
+        public void SetFocus()
         {
             this.Message.SetFlag(WM_MESSAGE.WM_SETFOCUS);
             this.Message.UnsetFlag(WM_MESSAGE.WM_RELEASEFOCUS);
@@ -285,6 +265,14 @@ namespace Framework.UI
                 else
                 {
                     return 0.0f;
+                }
+            }
+            protected set
+            {
+                WindowModelBase _model = this.GetModel() as WindowModelBase;
+                if (_model != null)
+                {
+                    _model.OpenTime = value;
                 }
             }
         }
@@ -353,6 +341,12 @@ namespace Framework.UI
         {
             base.OnDisable();
         }
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+
+            this.transform.localPosition = Vector3.zero;
+        }
 
         protected override void OnDestroy()
         {
@@ -386,9 +380,14 @@ namespace Framework.UI
             ResourceLoader.Instance.LoadControllerAsync<T>(_ret.attribute, new WeakReference<T>(_ret));
             return _ret;
         }
-
         public virtual void OnInit()
         {
+            WindowControllerBase _controller = this.Controller as WindowControllerBase;
+            if (_controller != null)
+            {
+                _controller.Message.SetFlag(WM_MESSAGE.WM_CREATE);
+                _controller.Message.UnsetFlag(WM_MESSAGE.WM_DESTROY);
+            }
         }
         public virtual void OnOpen(params object[] _parames)
         {
@@ -421,6 +420,7 @@ namespace Framework.UI
             if (_controller != null)
             {
                 _controller.Message.SetFlag(WM_MESSAGE.WM_DESTROY);
+                _controller.Message.UnsetFlag(WM_MESSAGE.WM_CREATE);
             }
         }
         public void SetActive(bool _active)
@@ -445,20 +445,20 @@ namespace Framework.UI
         }
     }
 
-    public abstract class CommonWindowBase : WindowModelBase, iPoolObject
+    public class CommonWindowBase : WindowModelBase, iPoolObject
     {
-        public void OnLoadPoolObject()
+        public virtual void OnLoad()
         {
 
         }
 
-        public void OnUnloadPoolObject()
+        public virtual void OnUnload()
         {
 
         }
     }
 
-    public abstract class WindowBase : WindowModelBase
+    public class WindowBase : WindowModelBase
     {
 
     }

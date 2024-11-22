@@ -21,11 +21,11 @@ namespace Framework.UI
         }
 
         /// <summary>
-        /// Load�Ǿ��ִ� WindowBase�� ���´�.
+        /// Load된 WindowBase를 얻어옵니다.
         /// </summary>
-        /// <typeparam name="T">�����ϰ��� �ϴ� ������ Ÿ��</typeparam>
-        /// <param name="_load">true�� ��� ������ return</param>
-        /// <returns>����� �ϴ� ������</returns>
+        /// <typeparam name="T">얻어올 WindowBase Type</typeparam>
+        /// <param name="_load">true인 경우 Load 후 return</param>
+        /// <returns>얻어온 WindowBase</returns>
         public T Get<T>(bool _load = false) where T : WindowBase
         {
             WindowModelBase _out = null;
@@ -53,10 +53,10 @@ namespace Framework.UI
             return _out as T;
         }
         /// <summary>
-        /// Window�� �����Ѵ�.
+        /// 윈도우를 엽니다..
         /// </summary>
-        /// <typeparam name="T">������ �ϴ� ������ Ÿ��</typeparam>
-        /// <returns>Open�� ������</returns>
+        /// <typeparam name="T">Open할 Window Type</typeparam>
+        /// <returns>Open된 window model</returns>
         public T Open<T>(params object[] _params) where T : WindowBase
         {
             T _ret = Get<T>(true);
@@ -68,19 +68,19 @@ namespace Framework.UI
             return _ret;
         }
         /// <summary>
-        /// �����츦 �ݴ´�.
+        /// 윈도우를 닫는다.
         /// </summary>
-        /// <typeparam name="T">�ݰ��� �ϴ� ������ Ÿ��</typeparam>
-        /// <param name="_destroy">true�ΰ�� ������ ���ÿ� ����</param>
+        /// <typeparam name="T">닫을 윈도우 Type</typeparam>
+        /// <param name="_destroy">true인경우 창을 삭제한다/param>
         public void Close<T>(bool _destroy = false) where T : WindowBase
         {
             T _ret = Get<T>();
             this.Close(_ret, _destroy);
         }
         /// <summary>
-        /// CommonWindow�� �����Ѵ�. ( MessageBox��� ���� �������� ���� �� �ִ� ������� )
+        /// CommonWindow를 엽니다. ( MessageBox등과 같은 다중으로 떠야 하는 윈도우류 )
         /// </summary>
-        /// <typeparam name="T">������ �ϴ� ������ Ÿ��</typeparam>
+        /// <typeparam name="T">Open할 CommonWindow Type</typeparam>
         /// <returns>Open�� ������</returns>
         public T OpenCommonWindow<T>(params object[] _params) where T : CommonWindowBase
         {
