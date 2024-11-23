@@ -1,4 +1,3 @@
-
 using Framework;
 
 enum LocalizedStringID

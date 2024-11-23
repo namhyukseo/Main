@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using Framework.Architecture;
-using Framework.UI;
 using Framework.Scene;
 using Framework.Singleton;
 using System;

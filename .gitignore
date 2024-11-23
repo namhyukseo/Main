@@ -5,3 +5,10 @@
 /Logs
 /Logs
 *.log
+/.vs
+/Logs
+*.log
+/obj
+/UserSettings
+/obj
+/obj

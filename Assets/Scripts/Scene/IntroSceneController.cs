@@ -1,6 +1,4 @@
 ﻿using Framework.Scene;
-using System.Collections;
-using UnityEngine;
 
 public class IntroSceneController : Framework.Scene.SceneController<IntroScene>
 {

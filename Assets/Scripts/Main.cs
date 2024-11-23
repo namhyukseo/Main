@@ -3,8 +3,7 @@ using Framework.Architecture;
 using Framework.Scene;
 using Framework.Singleton;
 using Framework.UI;
-using System.Collections;
-using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -13,6 +12,7 @@ public class Main : Singleton<Main>, IUpdate
     [RuntimeInitializeOnLoadMethod]
     public static void Run()
     {
+        Main.Create();
         UIManager.Create();
         SceneManager.Create();
         ResourceLoader.Create();
@@ -27,9 +27,22 @@ public class Main : Singleton<Main>, IUpdate
         Framework.Scene.SceneManager.Instance.ChangeScene<LobbyScene>();
     }
 
+    protected override void OnInit()
+    {
+        base.OnInit();
+
+        //GarbageCollector.GCMode = GarbageCollector.Mode.Manual;
+    }
+
     public void OnUpdate(float _deltaTime)
     {
-        throw new System.NotImplementedException();
+        List<string> test = new List<string>();
+        for(int i=0;i<1000;++i)
+        {
+            test.Add(string.Format("가나다라 = {0}", i));
+        }
+
+        //Debug.LogFormat("수집 {0}", GarbageCollector.CollectIncremental(30000));
     }
 }
 

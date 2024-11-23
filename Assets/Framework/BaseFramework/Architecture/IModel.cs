@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections;
-using UnityEngine;
+
 using MonoBehaviour = Framework.Architecture.MonoBehaviour;
 namespace Framework.Architecture
 {

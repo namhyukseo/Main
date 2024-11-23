@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Framework.UI;
-using UnityEngine.UI;
+﻿using Framework.UI;
 
 [Framework.Architecture.ResourceAttribute(Path = "Assets/Bundle/ui/UIRoot.prefab")]
 class UIRoot : UIRootBase

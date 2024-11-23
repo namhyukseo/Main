@@ -1,6 +1,4 @@
 ﻿using Framework.Scene;
-using System.Collections;
-using UnityEngine;
 
 public class LobbySceneController : Framework.Scene.SceneController<LobbyScene>
 {

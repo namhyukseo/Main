@@ -1,7 +1,5 @@
 ﻿using Framework.UI;
 using System;
-using System.Collections;
-using UnityEngine;
 
 namespace Framework.Architecture
 {

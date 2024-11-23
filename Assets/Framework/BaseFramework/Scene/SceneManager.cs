@@ -1,6 +1,4 @@
 ﻿using Framework.Singleton;
-using System.Collections;
-using UnityEngine;
 
 namespace Framework.Scene
 {

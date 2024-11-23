@@ -1,18 +1,10 @@
-using System;
-using System.Collections;
 using Framework.UI;
-using UnityEditor;
-using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Framework.Architecture
 {
     public class CustomInputModule : UnityEngine.EventSystems.StandaloneInputModule
     {
-        private bool ShouldIgnoreEventsOnNoFocus()
-        {
-            return !EditorApplication.isRemoteConnected;
-        }
         public override void Process()
         {
             base.Process();

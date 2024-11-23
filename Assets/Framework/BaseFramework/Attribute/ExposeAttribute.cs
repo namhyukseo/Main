@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-
-public class ExposeAttriubte : System.Attribute
+﻿public class ExposeAttriubte : System.Attribute
 {
     
 }

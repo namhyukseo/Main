@@ -59,3 +59,11 @@ The following packages were updated:
   com.unity.textmeshpro from version 3.0.6 to 3.0.7
   com.unity.timeline from version 1.6.4 to 1.7.6
   com.unity.visualscripting from version 1.8.0 to 1.9.4
+
+=== Fri Nov 22 22:50:56 2024
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.rider from version 3.0.31 to 3.0.34
