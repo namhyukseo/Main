@@ -31,7 +31,7 @@ namespace Framework.Architecture
         }
         public override string BundePath()
         {
-            return string.Empty;
+            return "bundle";
         }
         public WINDOW_LAYER Layer { get; set; }
         public bool IsModal { get; set; }
@@ -57,7 +57,7 @@ namespace Framework.Architecture
         }
         public override string BundePath()
         {
-            return string.Empty;
+            return "bundle";
         }
         public UnityEngine.SceneManagement.LoadSceneMode LoadMode { get; set; }
     }
