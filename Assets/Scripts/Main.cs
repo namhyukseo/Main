@@ -4,6 +4,8 @@ using Framework.Scene;
 using Framework.Singleton;
 using Framework.UI;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
+using System.Threading;
 using UnityEngine;
 
 
@@ -31,18 +33,37 @@ public class Main : Singleton<Main>, IUpdate
     {
         base.OnInit();
 
-        //GarbageCollector.GCMode = GarbageCollector.Mode.Manual;
+        logicThread = new Thread(this.OnUpdateForLogicThread);
+        logicThread.Start();
+    }
+
+    protected override void OnRelease()
+    {
+        base.OnRelease();
+        stopThread = true;
+        if(logicThread.Join(1000) == false ) { logicThread.Abort(); }
     }
 
     public void OnUpdate(float _deltaTime)
     {
-        List<string> test = new List<string>();
-        for(int i=0;i<1000;++i)
-        {
-            test.Add(string.Format("가나다라 = {0}", i));
-        }
-
-        //Debug.LogFormat("수집 {0}", GarbageCollector.CollectIncremental(30000));
     }
+
+    public void OnUpdateForLogicThread()
+    {
+        try
+        {
+            while (!stopThread)
+            {
+                UIManager.Instance.OnUpdate();
+            }
+        }
+        catch (ThreadAbortException _error)
+        {
+            Debug.LogException( _error );
+        }
+    }
+
+    private Thread logicThread = null;
+    private bool stopThread = false;
 }
 
