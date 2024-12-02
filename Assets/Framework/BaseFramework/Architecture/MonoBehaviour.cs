@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.ComponentModel.Composition.Primitives;
 using UnityEngine;
 
 namespace Framework.Architecture
@@ -25,12 +26,13 @@ namespace Framework.Architecture
         static GameObject rootGameObject = null;
         static RootMonoBehaviour rootMonoBehaviour = null;
 
-        static public void Create()
+        static public void Create(OnApplicationQuitDelegate _onApplicationQuit)
         {
             rootGameObject = new GameObject("Root");
             GameObject.DontDestroyOnLoad(rootGameObject);
             rootGameObject.hideFlags = HideFlags.DontSave;
             rootMonoBehaviour = rootGameObject.AddComponent<RootMonoBehaviour>();
+            onApplicationQuitDelegate = _onApplicationQuit;
         }  
 
         public static Action<float> eventUpdate         = null;
@@ -38,6 +40,10 @@ namespace Framework.Architecture
         public static Action<float> eventPostLateUpdate = null;
         public static Action<float> eventFixedUpdate    = null;
         public static Action<Event> eventGUIEvent       = null;
+
+        public delegate void OnApplicationQuitDelegate();
+        public static OnApplicationQuitDelegate onApplicationQuitDelegate = null;
+
 
         private void Update()
         {
@@ -52,6 +58,13 @@ namespace Framework.Architecture
         {
             eventFixedUpdate?.Invoke(UnityEngine.Time.fixedDeltaTime);
         }
+
+        private void OnApplicationQuit()
+        {
+            if(onApplicationQuitDelegate != null)
+                onApplicationQuitDelegate();
+        }
+
         public static Coroutine Start_Coroutine(IEnumerator _routine)
         {
             return rootMonoBehaviour.StartCoroutine(_routine);

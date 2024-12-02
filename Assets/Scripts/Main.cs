@@ -3,9 +3,6 @@ using Framework.Architecture;
 using Framework.Scene;
 using Framework.Singleton;
 using Framework.UI;
-using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
-using System.Threading;
 using UnityEngine;
 
 
@@ -19,7 +16,7 @@ public class Main : Singleton<Main>, IUpdate
         SceneManager.Create();
         ResourceLoader.Create();
         ObjectPool.Create();
-        RootMonoBehaviour.Create();
+        RootMonoBehaviour.Create(Main.Instance.OnApplicationQuit);
         LocalizeStringTable<LocalizedStringID>.Create();
         
         var _attibute = new ResourceAttribute();
@@ -33,37 +30,30 @@ public class Main : Singleton<Main>, IUpdate
     {
         base.OnInit();
 
-        logicThread = new Thread(this.OnUpdateForLogicThread);
-        logicThread.Start();
+        logicThreadObject = new ThreadObject(this.OnUpdateForLogicThread, 30);
+        logicThreadObject.Start();
     }
 
     protected override void OnRelease()
     {
         base.OnRelease();
-        stopThread = true;
-        if(logicThread.Join(1000) == false ) { logicThread.Abort(); }
+        logicThreadObject.Stop();
     }
 
     public void OnUpdate(float _deltaTime)
     {
     }
 
-    public void OnUpdateForLogicThread()
+    public void OnApplicationQuit()
     {
-        try
-        {
-            while (!stopThread)
-            {
-                UIManager.Instance.OnUpdate();
-            }
-        }
-        catch (ThreadAbortException _error)
-        {
-            Debug.LogException( _error );
-        }
+        SingletonContainer.Release();
     }
 
-    private Thread logicThread = null;
-    private bool stopThread = false;
+    public bool OnUpdateForLogicThread(float _deltaTime)
+    {
+        return true;
+    }
+
+    private ThreadObject logicThreadObject = null;
 }
 

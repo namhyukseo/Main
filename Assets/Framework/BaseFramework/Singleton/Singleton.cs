@@ -94,9 +94,8 @@ namespace Framework.Singleton
         public static void Release()
         {
             /// 해제 되지 않은 등록된 모든 Singleton을 명시적으로 해제 시킨다.
-            ISingleton[] _arrary = null;
+            ISingleton[] _arrary = new ISingleton[container.Values.Count];
             container.Values.CopyTo(_arrary, 0);
-            container.Clear();
             int _count = _arrary.Length;
             for (int _index = _count - 1; _index >= 0; --_index)
             {
