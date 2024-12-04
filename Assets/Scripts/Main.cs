@@ -1,4 +1,5 @@
-﻿using Framework;
+﻿using System.Threading;
+using Framework;
 using Framework.Architecture;
 using Framework.Scene;
 using Framework.Singleton;
@@ -6,7 +7,7 @@ using Framework.UI;
 using UnityEngine;
 
 
-public class Main : Singleton<Main>, IUpdate
+public class Main : Framework.Singleton.Singleton<Main>, IUpdate
 {
     [RuntimeInitializeOnLoadMethod]
     public static void Run()
@@ -30,7 +31,7 @@ public class Main : Singleton<Main>, IUpdate
     {
         base.OnInit();
 
-        logicThreadObject = new ThreadObject(this.OnUpdateForLogicThread, 30);
+        logicThreadObject = new ThreadObject(this.OnUpdateForLogicThread, 60, "LogicThread");
         logicThreadObject.Start();
     }
 
@@ -42,6 +43,7 @@ public class Main : Singleton<Main>, IUpdate
 
     public void OnUpdate(float _deltaTime)
     {
+        DebugLogForThread.PrintDebugLog();
     }
 
     public void OnApplicationQuit()
@@ -49,8 +51,12 @@ public class Main : Singleton<Main>, IUpdate
         SingletonContainer.Release();
     }
 
+    System.Random   random = new System.Random((int)Time.time);
     public bool OnUpdateForLogicThread(float _deltaTime)
     {
+        int _sleep = random.Next(0, 33);
+        DebugLogForThread.LogFormat("[Update ms = {0}, deltaTime = {1}", _sleep, _deltaTime);
+        Thread.Sleep(_sleep);
         return true;
     }
 
