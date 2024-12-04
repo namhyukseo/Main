@@ -74,6 +74,7 @@
     <Compile Include="Assets\Framework\BaseFramework\UI\UIRootBase.cs" />
     <Compile Include="Assets\Scripts\Scene\LobbySceneController.cs" />
     <Compile Include="Assets\Framework\BaseFramework\UI\WindowLayer.cs" />
+    <Compile Include="Assets\Framework\BaseFramework\Architecture\ThreadObject.cs" />
     <Compile Include="Assets\Framework\BaseFramework\EventSystem\KeyEvent.cs" />
     <Compile Include="Assets\Scripts\UI\IntroWindowController.cs" />
     <Compile Include="Assets\Framework\BaseFramework\UI\Window.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Assets\Framework\BaseFramework\ObjectPool\IPoolObject.cs" />
     <Compile Include="Assets\Framework\BaseFramework\Singleton\Singleton.cs" />
     <Compile Include="Assets\Framework\BaseFramework\Architecture\Attribute.cs" />
+    <Compile Include="Assets\Framework\BaseFramework\Dev\DebugLog.cs" />
     <Compile Include="Assets\Scripts\GameData\LocalizedString.cs" />
     <Compile Include="Assets\Framework\BaseFramework\UI\WindowTitlebar.cs" />
   </ItemGroup>
